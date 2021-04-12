@@ -22,12 +22,7 @@ import { WebSocketService } from './web-socket.service';
 })
 export class AppComponent {
   subscr: any;
-
-
-
   public notifications = 0;
-
-
   readonly VAPID_PUBLIC_KEY ="BFA9FA7upFtgYHsMIWc7giWYk5LhmX10QBJWyA-1vg9VBY3qfi1coQLjWKZEczwxcUmmU9Dzjbz24jTb3DmmWtU";
 
   constructor(private webSocketService: WebSocketService,

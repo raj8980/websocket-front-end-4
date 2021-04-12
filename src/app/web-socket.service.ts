@@ -15,7 +15,7 @@ privateKey="0Lo0LCj0PcbpxzIyqTlBCmHCuIEy9_aCWbcVqBG9lqs";
 
     // Open connection with the back-end socket
     public connect() {
-        let socket = new SockJs(`http://demo-ssedssd.herokuapp.com/socket`);
+        let socket = new SockJs(`https://demo-ssedssd.herokuapp.com/socket`);
 
         let stompClient = Stomp.over(socket);
 

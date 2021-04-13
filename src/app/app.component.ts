@@ -28,13 +28,26 @@ export class AppComponent {
   detailsSub: any[] = [];
 
   constructor(private webSocketService: WebSocketService,
-    private _pushNotifications: PushNotificationsService, private swPush: SwPush,
+    private _pushNotifications: PushNotificationsService, readonly swPush: SwPush,
     private updates: SwUpdate, private httpService: HttpService) {
-    
+      updates.available.subscribe(event => {
+        console.log('current version is', event.current);
+        console.log('available version is', event.available);
+      });
+      updates.activated.subscribe(event => {
+        console.log('old version was', event.previous);
+        console.log('new version is', event.current);
+      });
+      updates.available.subscribe(event => {
+        
+          updates.activateUpdate().then(() => document.location.reload());
+        
+      });
+      
     this._pushNotifications.requestPermission();
-    
+
     let stompClient = this.webSocketService.connect();
-    
+
     stompClient.connect({}, (_frame: any) => {
       stompClient.subscribe('/topic/notification', (_notifications: { body: string; }) => {
         this.notifications = JSON.parse(_notifications.body).count;
@@ -43,13 +56,18 @@ export class AppComponent {
     });
   }
 
-  subscribeToNotifications() {
-    this.swPush.requestSubscription({
-        serverPublicKey: this.VAPID_PUBLIC_KEY
-    })
-    .then(sub => this.httpService.getUserDetails(sub).subscribe())
-    .catch(err => console.error("Could not subscribe to notifications", err));
-}
+  public async subscribeToNotifications() {
+    try {
+      const sub = await this.swPush.requestSubscription({
+        serverPublicKey: this.VAPID_PUBLIC_KEY,
+      });
+      this.httpService.getUserDetails(sub).subscribe();
+      // TODO: Send to server.
+    } catch (err) {
+      console.error('Could not subscribe due to:', err);
+    }
+
+  }
 
   notify() {
 
@@ -63,8 +81,8 @@ export class AppComponent {
 
     this._pushNotifications.generateNotification(data);
   }
-
-
 }
+
+
 
 

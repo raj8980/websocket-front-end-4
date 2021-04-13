@@ -1,4 +1,5 @@
 
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { WebSocketService } from './web-socket.service';
@@ -9,6 +10,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { PushNotificationsModule } from 'ng-push';
 import { PushNotificationsService } from './push-notify.service';
 import { environment } from '../environments/environment';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpService } from './http.service';
 
 
 @NgModule({
@@ -19,18 +22,13 @@ import { environment } from '../environments/environment';
     BrowserModule,
     AppRoutingModule,
     PushNotificationsModule,
-    // ServiceWorkerModule.register('@angular/ngsw-worker.js', {
-    //   enabled: true,
-    //   registrationStrategy: 'registerWhenStable:30000'
-    // }),
+    HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production,
-      // Register the ServiceWorker as soon as the app is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    })
+      enabled: true
+    }),
+   
   ],
-  providers: [WebSocketService,PushNotificationsService],
+  providers: [WebSocketService,PushNotificationsService,HttpService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
